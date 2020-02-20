@@ -1,6 +1,8 @@
 package google.hashcode.main;
 
 
+import google.hashcode.data.Book;
+import google.hashcode.data.Library;
 import google.hashcode.data.Output;
 
 import java.io.File;
@@ -10,21 +12,14 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class InputReader {
     public static Map<Character, Integer> terrainValueMap = new HashMap<>();
 
     public static void main(final String[] args) {
-        terrainValueMap = getTerrainMap();
-        final File f = new File("resources/1_victoria_lake.txt");
+        final File f = new File("resources/a_example.txt");
         try {
             final FileInputStream inputStream = new FileInputStream(f);
             final Scanner sc = new Scanner(inputStream, "UTF-8");
@@ -34,77 +29,57 @@ public class InputReader {
 
             final String firstLine = sc.nextLine();
             final String[] firstArr = firstLine.split("\\s");
-            int customerOffices = Integer.parseInt(firstArr[2]);
+            int books = Integer.parseInt(firstArr[0]);
+            int libraries = Integer.parseInt(firstArr[1]);
+            int days = Integer.parseInt(firstArr[2]);
 
-            final int n = Integer.parseInt(firstArr[0]);
-            final int m = Integer.parseInt(firstArr[1]);
-            final int[][] grid = new int[m][n];
+            final String scores = sc.nextLine();
+            final String[] arrScores = scores.split("\\s");
 
-//            final List<Customer> customers = new ArrayList<>();
-            int customerId = 1;
-            while (customerOffices > 0) {
-                final String cutomerOffice = sc.nextLine();
-                final String[] arrCustOffice = cutomerOffice.split("\\s");
-
-//                final Point point = new Point(Integer.parseInt(arrCustOffice[0]) -1, Integer.parseInt(arrCustOffice[1]) -1, null);
-//                final Customer customer = new Customer(customerId, point,
-//                        Integer.parseInt(arrCustOffice[2]));
-//                customers.add(customer);
-
-                customerOffices--;
-                customerId++;
+            int count = 0;
+            Map<Integer, Integer> bookIndexScoreMap = new HashMap<>();
+            while (books > 0) {
+                bookIndexScoreMap.put(count,Integer.parseInt(arrScores[count]));
+                books--;
+                count++;
             }
 
-            int countRow = 0;
+            List<Library> libraryList = new ArrayList<>();
+            while(libraries > 0){
+                final String line1 = sc.nextLine();
+                final String[] arrLine1 = line1.split("\\s");
 
-            while (sc.hasNextLine()) {
+                final String line2 = sc.nextLine();
+                final String[] arrLine2 = line2.split("\\s");
 
-                final String line = sc.nextLine();
-                for (int i = 0; i < n; i++) {
-                    grid[countRow][i] = terrainValueMap.get(line.charAt(i));
-                }
-                countRow++;
+                Library library = new Library();
+                library.setSignUp(Integer.parseInt(arrLine1[1]));
+                library.setShipPerDay(Integer.parseInt(arrLine1[2]));
+                library.setBooks(createBooks(arrLine2, bookIndexScoreMap));
+
+                libraryList.add(library);
+
+                libraries--;
             }
-
 
             System.out.println("Finished reading file......");
-//			System.out.println(intGrid);
 
-//            final GraphTraversal graphTraversal = new GraphTraversal();
-
-            System.out.println("Start traversing graph ....");
-//            final List<RouteIterator> routeIterators = graphTraversal.traverseGraph(grid, customers);
-
-            //create Route iterator for each coordinate in the grid
-
-            //Iterate the Route iterator to find the apt offices
-
-            //populate the Output object
-
-            //convert the output object to a file
-
-
-//            final Output student = new Output(1, 2, "uuuddddrrrlll");
             //			WriteObjectToFile(student);
         } catch (final FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private static Map<Character, Integer> getTerrainMap() {
-        final Map<Character, Integer> terrainValueMap = new HashMap<>();
-        terrainValueMap.put('~', 800);
-        terrainValueMap.put('*', 200);
-        terrainValueMap.put('+', 150);
-        terrainValueMap.put('X', 120);
-        terrainValueMap.put('_', 100);
-        terrainValueMap.put('H', 70);
-        terrainValueMap.put('T', 50);
-        terrainValueMap.put('#', 0);
-
-        return terrainValueMap;
+    private static List<Book> createBooks(String[] arrLine2, Map<Integer, Integer> bookIndexScoreMap) {
+        List<Book> bookList = new ArrayList<>();
+        int count = 0;
+        while(count != arrLine2.length) {
+            bookList.add(new Book(bookIndexScoreMap.get(Integer.parseInt(arrLine2[count]))));
+            count++;
+        }
+        Collections.sort(bookList);
+        return bookList;
     }
-
 
     public void WriteObjectToFile(final Output result) {
         try {
