@@ -3,9 +3,27 @@ package google.hashcode.data;
 import java.util.List;
 
 public class Library implements Comparable<Library> {
+    int index;
     List<Book> books;
     int signUp;
     int shipPerDay;
+    int daysForShipping;
+
+    public int getDaysForShipping() {
+        return daysForShipping;
+    }
+
+    public void setDaysForShipping(int daysForShipping) {
+        this.daysForShipping = daysForShipping;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 
     public List<Book> getBooks() {
         return books;

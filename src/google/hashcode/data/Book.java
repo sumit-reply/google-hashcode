@@ -1,9 +1,19 @@
 package google.hashcode.data;
 
 public class Book implements Comparable<Book> {
+    int index;
     int score;
 
-    public Book(int score) {
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public Book(int index, int score) {
+        this.index = index;
         this.score = score;
     }
 
